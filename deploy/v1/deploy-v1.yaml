@@ -1,0 +1,36 @@
+##################################################################################################
+# Details service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: deploy
+  labels:
+    app: deploy
+spec:
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: deploy
+  type : NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: deploy-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: deploy
+        version: v1
+    spec:
+      containers:
+      - name: deploy
+        image: registry.cn-shenzhen.aliyuncs.com/jukylin/deploy-v1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+---

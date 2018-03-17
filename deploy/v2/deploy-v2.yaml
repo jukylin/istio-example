@@ -1,0 +1,22 @@
+##################################################################################################
+# Details service
+##################################################################################################
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: deploy-v2
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: deploy
+        version: v2
+    spec:
+      containers:
+      - name: deploy
+        image: registry.cn-shenzhen.aliyuncs.com/jukylin/deploy-v2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+---

@@ -1,0 +1,35 @@
+##################################################################################################
+# Details service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: sleep
+  labels:
+    app: sleep
+spec:
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: sleep
+  type : NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: sleep
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sleep
+    spec:
+      containers:
+      - name: deploy
+        image: registry.cn-shenzhen.aliyuncs.com/jukylin/sleep
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+---

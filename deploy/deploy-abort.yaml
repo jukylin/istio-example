@@ -1,0 +1,11 @@
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  name: deploy-abort
+spec:
+  destination:
+    name: deploy
+  httpFault:
+    abort:
+      percent: 100
+      httpStatus: 500

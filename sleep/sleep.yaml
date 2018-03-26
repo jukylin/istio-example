@@ -25,11 +25,26 @@ spec:
     metadata:
       labels:
         app: sleep
+        version: v1
     spec:
       containers:
-      - name: deploy
+      - name: sleep
         image: registry.cn-shenzhen.aliyuncs.com/jukylin/sleep
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
+---
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  name: sleep-route-rule
+spec:
+  destination:
+    name: sleep
+  route:
+  - labels:
+      version: v1
+  httpReqTimeout:
+    simpleTimeout:
+      timeout: 5s
 ---

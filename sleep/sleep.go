@@ -5,11 +5,15 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"strconv"
 )
 
 func sayhello(w http.ResponseWriter, r *http.Request) {
-	time.Sleep(10 * time.Second)
-	fmt.Fprint(w, "Sleep 10s")
+	r.ParseForm()
+	sleep := r.Form.Get("sleep")
+	sec,_ := strconv.Atoi(sleep)
+	time.Sleep(time.Duration(sec) * time.Second)
+	fmt.Fprint(w, "Sleep "+ sleep)
 }
 
 func main() {

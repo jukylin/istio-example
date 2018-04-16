@@ -5,7 +5,7 @@ metadata:
   namespace: default
 spec:
   rules:
-  - host: index.com
+  - host: index.jukylin.com
     http:
       paths:
       - path: /

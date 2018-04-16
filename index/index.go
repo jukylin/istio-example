@@ -25,7 +25,7 @@ func sleep(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 
-	fmt.Println("sleep:", string(body))
+	fmt.Fprint(w, "sleep:", string(body), "resp.StatusCode" , resp.StatusCode)
 }
 
 
@@ -41,13 +41,10 @@ func deploy(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(resp.Body)
 
-	fmt.Println("resp.StatusCode", resp.StatusCode)
-
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-
-	fmt.Println("deploy:", string(body))
+	fmt.Fprint(w, "deploy:", string(body), "resp.StatusCode" , resp.StatusCode)
 }
 
 

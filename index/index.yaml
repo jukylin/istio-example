@@ -18,7 +18,7 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: sleep
+  name: index
 spec:
   replicas: 1
   template:

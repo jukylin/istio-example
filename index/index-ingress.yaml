@@ -11,4 +11,4 @@ spec:
       - path: /
         backend:
           serviceName: index
-          servicePort: 8080
+          servicePort: 8000

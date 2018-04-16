@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: index-ingress
+  namespace: default
+spec:
+  rules:
+  - host: index.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: index
+          servicePort: 8080

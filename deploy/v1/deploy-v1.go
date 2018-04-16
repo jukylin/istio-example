@@ -4,9 +4,28 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-)
+	"io/ioutil"
+	)
 
 func sayhello(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	sleep := r.Form.Get("sleep")
+	resp, err := http.Get("http://sleep:8080?sleep=" + sleep)
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	fmt.Println(string(body))
+
 	fmt.Fprint(w, "Hello V1")
 }
 

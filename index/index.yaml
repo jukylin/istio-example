@@ -1,0 +1,37 @@
+##################################################################################################
+# Details service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: index
+  labels:
+    app: index
+spec:
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: index
+  type : NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: sleep
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: index
+        version: v1
+    spec:
+      containers:
+      - name: index
+        image: registry.cn-shenzhen.aliyuncs.com/jukylin/index
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+---
+

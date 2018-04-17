@@ -5,13 +5,16 @@ import(
 	"fmt"
 	"io/ioutil"
 	"strconv"
+	"time"
 )
 
 func sleep(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	sleep := r.Form.Get("sleep")
-	resp, err := http.Get("http://sleep:8080?sleep=" + sleep)
 
+	t1 := time.Now()
+	resp, err := http.Get("http://sleep:8080?sleep=" + sleep)
+	elapsed := time.Since(t1)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -27,7 +30,8 @@ func sleep(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write([]byte("sleep:" + string(body)))
-	w.Write([]byte("resp.StatusCode" + strconv.Itoa(resp.StatusCode)))
+	w.Write([]byte(" resp.StatusCode" + strconv.Itoa(resp.StatusCode)))
+	w.Write([]byte(" 间隔" + elapsed.String()))
 }
 
 

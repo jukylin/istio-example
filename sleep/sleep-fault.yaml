@@ -1,0 +1,12 @@
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  name: sleep-fault
+spec:
+  destination:
+    name: sleep
+  httpFault:
+    abort:
+      httpStatus: 500
+      percent: 100
+---

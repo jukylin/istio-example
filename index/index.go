@@ -4,6 +4,7 @@ import(
 	"net/http"
 	"fmt"
 	"io/ioutil"
+	"strconv"
 )
 
 func sleep(w http.ResponseWriter, r *http.Request) {
@@ -25,7 +26,8 @@ func sleep(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 
-	fmt.Fprint(w, "sleep:", string(body), "resp.StatusCode" , resp.StatusCode)
+	w.Write([]byte("sleep:" + string(body)))
+	w.Write([]byte("resp.StatusCode" + strconv.Itoa(resp.StatusCode)))
 }
 
 
@@ -44,7 +46,9 @@ func deploy(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	fmt.Fprint(w, "deploy:", string(body), "resp.StatusCode" , resp.StatusCode)
+
+	w.Write([]byte("deploy:" + string(body)))
+	w.Write([]byte("resp.StatusCode" + strconv.Itoa(resp.StatusCode)))
 }
 
 

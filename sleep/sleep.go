@@ -17,8 +17,12 @@ func sayhello(w http.ResponseWriter, r *http.Request) {
 }
 
 func retry(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(500)
-	fmt.Fprint(w, "retry")
+	r.ParseForm()
+	status := r.Form.Get("status")
+	s ,_ := strconv.Atoi(status)
+
+	w.WriteHeader(s)
+	fmt.Fprint(w, "rep status" + status)
 }
 
 func main() {

@@ -56,11 +56,38 @@ func deploy(w http.ResponseWriter, r *http.Request) {
 }
 
 
+func retry(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	status := r.Form.Get("status")
+
+	t1 := time.Now()
+	resp, err := http.Get("http://sleep:8080/retry?status=" + status)
+	elapsed := time.Since(t1)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	fmt.Println("resp.StatusCode", resp.StatusCode)
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	w.Write([]byte("sleep:" + string(body)))
+	w.Write([]byte("\n resp.StatusCode " + strconv.Itoa(resp.StatusCode)))
+	w.Write([]byte("\n 间隔 " + elapsed.String()))
+}
+
 
 func main()  {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/sleep", sleep)
+	mux.HandleFunc("/retry", retry)
 	mux.HandleFunc("/deploy", deploy)
 	http.ListenAndServe(":8000", mux)
 }

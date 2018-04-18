@@ -16,9 +16,17 @@ func sayhello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Sleep "+ sleep)
 }
 
+func retry(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(500)
+	fmt.Fprint(w, "retry")
+}
+
 func main() {
-	http.HandleFunc("/", sayhello)       //设置访问的路由
-	err := http.ListenAndServe(":8080", nil) //设置监听的端口
+	mux := http.NewServeMux()
+
+	mux.HandleFunc("/", sayhello)
+	mux.HandleFunc("/retry", retry)
+	err := http.ListenAndServe(":8080", mux)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}

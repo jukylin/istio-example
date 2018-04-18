@@ -30,8 +30,8 @@ func sleep(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write([]byte("sleep:" + string(body)))
-	w.Write([]byte(" resp.StatusCode" + strconv.Itoa(resp.StatusCode)))
-	w.Write([]byte(" 间隔" + elapsed.String()))
+	w.Write([]byte("\n resp.StatusCode " + strconv.Itoa(resp.StatusCode)))
+	w.Write([]byte("\n 间隔 " + elapsed.String()))
 }
 
 

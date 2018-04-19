@@ -9,6 +9,7 @@ import(
 )
 
 func sleep(w http.ResponseWriter, r *http.Request) {
+
 	r.ParseForm()
 	sleep := r.Form.Get("sleep")
 
@@ -30,8 +31,10 @@ func sleep(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write([]byte("sleep:" + string(body)))
-	w.Write([]byte("\n resp.StatusCode " + strconv.Itoa(resp.StatusCode)))
-	w.Write([]byte("\n 间隔 " + elapsed.String()))
+	w.Write([]byte("\nresp.StatusCode " + strconv.Itoa(resp.StatusCode)))
+	w.Write([]byte("\n间隔 " + elapsed.String()))
+	w.Write([]byte("\n"))
+
 }
 
 
@@ -52,7 +55,8 @@ func deploy(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write([]byte("deploy:" + string(body)))
-	w.Write([]byte("resp.StatusCode" + strconv.Itoa(resp.StatusCode)))
+	w.Write([]byte("\nresp.StatusCode" + strconv.Itoa(resp.StatusCode)))
+	w.Write([]byte("\n"))
 }
 
 
@@ -78,8 +82,10 @@ func retry(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write([]byte("sleep:" + string(body)))
-	w.Write([]byte("\n resp.StatusCode " + strconv.Itoa(resp.StatusCode)))
-	w.Write([]byte("\n 间隔 " + elapsed.String()))
+	w.Write([]byte("\nresp.StatusCode " + strconv.Itoa(resp.StatusCode)))
+	w.Write([]byte("\n间隔 " + elapsed.String()))
+	w.Write([]byte("\n"))
+
 }
 
 

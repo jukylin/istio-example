@@ -1,0 +1,18 @@
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  name: sleep-cb
+  namespace: default
+spec:
+  destination:
+    name: sleep
+    labels:
+      version: v1
+  circuitBreaker:
+    simpleCb:
+      maxConnections: 100
+      httpMaxRequests: 1000
+      httpMaxRequestsPerConnection: 10
+      httpConsecutiveErrors: 7
+      sleepWindow: 15m
+      httpDetectionInterval: 5m

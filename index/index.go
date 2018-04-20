@@ -6,6 +6,7 @@ import(
 	"io/ioutil"
 	"strconv"
 	"time"
+	"net"
 )
 
 func sleep(w http.ResponseWriter, r *http.Request) {
@@ -33,10 +34,28 @@ func sleep(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("sleep:" + string(body)))
 	w.Write([]byte("\nresp.StatusCode " + strconv.Itoa(resp.StatusCode)))
 	w.Write([]byte("\n间隔 " + elapsed.String()))
+	w.Write([]byte("\n ip " + getPrivateIPIfAvailable().String()))
 	w.Write([]byte("\n"))
-
 }
 
+func getPrivateIPIfAvailable() net.IP {
+	addrs, _ := net.InterfaceAddrs()
+	for _, addr := range addrs {
+		var ip net.IP
+		switch v := addr.(type) {
+		case *net.IPNet:
+			ip = v.IP
+		case *net.IPAddr:
+			ip = v.IP
+		default:
+			continue
+		}
+		if !ip.IsLoopback() {
+			return ip
+		}
+	}
+	return net.IPv4zero
+}
 
 func deploy(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
@@ -56,6 +75,7 @@ func deploy(w http.ResponseWriter, r *http.Request) {
 
 	w.Write([]byte("deploy:" + string(body)))
 	w.Write([]byte("\nresp.StatusCode" + strconv.Itoa(resp.StatusCode)))
+	w.Write([]byte("\n ip " + getPrivateIPIfAvailable().String()))
 	w.Write([]byte("\n"))
 }
 

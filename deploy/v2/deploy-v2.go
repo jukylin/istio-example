@@ -7,6 +7,13 @@ import (
 )
 
 func sayhello(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	p := r.Form.Get("panic")
+	if p == "1"{
+		panic("pance 退出")
+	}
+
+
 	w.Write([]byte("Hello V2 \n"))
 	w.Write([]byte("ip " + getPrivateIPIfAvailable().String() + "\n"))
 }

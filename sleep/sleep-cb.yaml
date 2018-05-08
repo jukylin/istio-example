@@ -14,5 +14,6 @@ spec:
       httpMaxRequests: 1000
       httpMaxRequestsPerConnection: 10
       httpConsecutiveErrors: 7
+      #      发现不可用服务，踢出负载均衡时间
       sleepWindow: 15m
       httpDetectionInterval: 5m

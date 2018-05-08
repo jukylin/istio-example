@@ -6,6 +6,10 @@ import (
 	"time"
 	"strconv"
 	"net"
+	"os"
+	"os/signal"
+	"syscall"
+	"fmt"
 )
 
 func sayhello(w http.ResponseWriter, r *http.Request) {
@@ -47,10 +51,16 @@ func getPrivateIPIfAvailable() net.IP {
 func main() {
 	mux := http.NewServeMux()
 
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+	s := <-sigs
+	fmt.Println("1", s)
+
 	mux.HandleFunc("/", sayhello)
 	mux.HandleFunc("/retry", retry)
 	err := http.ListenAndServe(":8080", mux)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
+
 }

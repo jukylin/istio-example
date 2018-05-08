@@ -1,8 +1,9 @@
 FROM alpine
 
+RUN apk add --update bash && rm -rf /var/cache/apk/*
 # obtained from debian ca-certs deb using fetch_cacerts.sh
 ADD ca-certificates.tgz /
 ADD mixs /usr/local/bin/
 
 ENTRYPOINT ["/usr/local/bin/mixs", "server"]
-CMD ["--configStoreURL=fs:///etc/opt/mixer/configroot","--configStoreURL=k8s://"]
+CMD ["--configStoreURL=fs:///etc/opt/mixer/configroot","--configStoreURL=k8s://", "--log_stacktrace_level=debug"]

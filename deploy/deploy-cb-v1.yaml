@@ -1,0 +1,19 @@
+apiVersion: config.istio.io/v1alpha1
+kind: DestinationPolicy
+metadata:
+  name: deploy-cb-v1
+spec:
+  destination:
+    name: deploy
+    labels:
+      version: v1
+  circuitBreaker:
+    simpleCb:
+      maxConnections: 1
+      httpMaxRequests: 1
+      httpMaxPendingRequests: 1
+      sleepWindow: 3m
+      httpDetectionInterval: 1m
+      httpMaxEjectionPercent: 10
+      httpConsecutiveErrors: 1
+      httpMaxRequestsPerConnection: 1

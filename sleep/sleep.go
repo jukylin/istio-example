@@ -6,9 +6,6 @@ import (
 	"time"
 	"strconv"
 	"net"
-	"os"
-	"os/signal"
-	"syscall"
 	"fmt"
 )
 
@@ -51,10 +48,10 @@ func getPrivateIPIfAvailable() net.IP {
 func main() {
 	mux := http.NewServeMux()
 
-	sigs := make(chan os.Signal, 1)
-	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
-	s := <-sigs
-	fmt.Println("1", s)
+	//sigs := make(chan os.Signal, 1)
+	//signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+	//s := <-sigs
+	fmt.Println("run in 8080")
 
 	mux.HandleFunc("/", sayhello)
 	mux.HandleFunc("/retry", retry)

@@ -7,13 +7,13 @@ metadata:
   name: sleep
   labels:
     app: sleep
-spec:
-  ports:
-  - port: 8080
-    name: http
-  selector:
-    app: sleep
-  type : NodePort
+#spec:
+#  ports:
+#  - port: 8080
+#    name: http
+#  selector:
+#    app: sleep
+#  type : NodePort
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -26,22 +26,15 @@ spec:
   template:
     metadata:
       annotations:
-        sidecar.istio.io/status: '{"version":"43466efda2266e066fb5ad36f2d1658de02fc9411f6db00ccff561300a2a3c78","initContainers":["istio-init","enable-core-dump"],"containers":["istio-proxy"],"volumes":["istio-envoy","istio-certs"]}'
+        sidecar.istio.io/status: '{"version":"1e8f480eee0d2c455cb96c4acc9a723ca2b4bff32a7837e65787a5ef6853c820","initContainers":["istio-init","enable-core-dump"],"containers":["istio-proxy"],"volumes":["istio-envoy","istio-certs"]}'
       creationTimestamp: null
       labels:
         app: sleep
         version: v1
     spec:
       containers:
-      - image: registry.cn-shenzhen.aliyuncs.com/jukylin/sleep
+      - image: sleep
         imagePullPolicy: IfNotPresent
-        lifecycle:
-          preStop:
-            exec:
-              command:
-              - kill
-              - -SIGTERM
-              - "1"
         name: sleep
         ports:
         - containerPort: 8080
@@ -60,15 +53,15 @@ spec:
         - --parentShutdownDuration
         - 1m0s
         - --discoveryAddress
-        - istio-pilot.istio-system:8080
+        - istio-pilot.istio-system:15007
         - --discoveryRefreshDelay
-        - 1s
+        - 10s
         - --zipkinAddress
         - zipkin.istio-system:9411
         - --connectTimeout
         - 10s
         - --statsdUdpAddress
-        - istio-mixer.istio-system:9125
+        - istio-statsd-prom-bridge.istio-system:9125
         - --proxyAdminPort
         - "15000"
         - --controlPlaneAuthPolicy
@@ -86,8 +79,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
-        image: registry.cn-shenzhen.aliyuncs.com/jukylin/pilot-agent:latest
-        #image: docker.io/istio/proxy:0.7.1
+        image: docker.io/istio/proxy:0.6.0
         imagePullPolicy: IfNotPresent
         name: istio-proxy
         resources: {}
@@ -107,7 +99,7 @@ spec:
         - "15001"
         - -u
         - "1337"
-        image: docker.io/istio/proxy_init:0.7.1
+        image: docker.io/istio/proxy_init:0.6.0
         imagePullPolicy: IfNotPresent
         name: istio-init
         resources: {}

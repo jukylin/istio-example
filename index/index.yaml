@@ -13,7 +13,8 @@ spec:
     name: http
   selector:
     app: index
-  type : NodePort
+  #type : NodePort
+  type : LoadBalancer 
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment

@@ -1,0 +1,37 @@
+##################################################################################################
+# Details service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: php-swoole
+  labels:
+    app: php-swoole
+spec:
+  ports:
+  - port: 8000
+    name: http
+  selector:
+    app: php-swoole
+  type : NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: php-swoole
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: php-swoole
+        version: v1
+    spec:
+      containers:
+      - name: php-swoole
+        image: registry.cn-shenzhen.aliyuncs.com/jukylin/swoole-app 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+---
+

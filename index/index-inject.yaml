@@ -13,7 +13,8 @@ spec:
     name: http
   selector:
     app: index
-  type : NodePort
+  #type : NodePort
+  type : LoadBalancer 
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -26,7 +27,7 @@ spec:
   template:
     metadata:
       annotations:
-        sidecar.istio.io/status: '{"version":"1e8f480eee0d2c455cb96c4acc9a723ca2b4bff32a7837e65787a5ef6853c820","initContainers":["istio-init","enable-core-dump"],"containers":["istio-proxy"],"volumes":["istio-envoy","istio-certs"]}'
+        sidecar.istio.io/status: '{"version":"5a357b5fa6005e3d7642e92accb42383c4782e9865d5c5df193217a69bebcf46","initContainers":["istio-init"],"containers":["istio-proxy"],"volumes":["istio-envoy","istio-certs"],"imagePullSecrets":null}'
       creationTimestamp: null
       labels:
         app: index
@@ -55,7 +56,7 @@ spec:
         - --discoveryAddress
         - istio-pilot.istio-system:15007
         - --discoveryRefreshDelay
-        - 10s
+        - 1s
         - --zipkinAddress
         - zipkin.istio-system:9411
         - --connectTimeout
@@ -79,10 +80,18 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
-        image: docker.io/istio/proxy:0.6.0
+        - name: ISTIO_META_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: ISTIO_META_INTERCEPTION_MODE
+          value: REDIRECT
+        image: gcr.io/istio-release/proxyv2:1.0.0
         imagePullPolicy: IfNotPresent
         name: istio-proxy
-        resources: {}
+        resources:
+          requests:
+            cpu: 10m
         securityContext:
           privileged: false
           readOnlyRootFilesystem: true
@@ -99,7 +108,17 @@ spec:
         - "15001"
         - -u
         - "1337"
-        image: docker.io/istio/proxy_init:0.6.0
+        - -m
+        - REDIRECT
+        - -i
+        - '*'
+        - -x
+        - ""
+        - -b
+        - 8000,
+        - -d
+        - ""
+        image: gcr.io/istio-release/proxy_init:1.0.0
         imagePullPolicy: IfNotPresent
         name: istio-init
         resources: {}
@@ -107,17 +126,6 @@ spec:
           capabilities:
             add:
             - NET_ADMIN
-      - args:
-        - -c
-        - sysctl -w kernel.core_pattern=/etc/istio/proxy/core.%e.%p.%t && ulimit -c
-          unlimited
-        command:
-        - /bin/sh
-        image: alpine
-        imagePullPolicy: IfNotPresent
-        name: enable-core-dump
-        resources: {}
-        securityContext:
           privileged: true
       volumes:
       - emptyDir:

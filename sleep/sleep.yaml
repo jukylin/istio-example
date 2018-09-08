@@ -7,13 +7,12 @@ metadata:
   name: sleep
   labels:
     app: sleep
-#spec:
-#  ports:
-#  - port: 8080
-#    name: http
-#  selector:
-#    app: sleep
-#  type : NodePort
+spec:
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: sleep
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -29,6 +28,7 @@ spec:
     spec:
       containers:
       - name: sleep
+        #image: registry.cn-shenzhen.aliyuncs.com/jukylin/sleep
         image: sleep
         imagePullPolicy: IfNotPresent
         ports:
